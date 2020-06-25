@@ -15,13 +15,13 @@ class CreateTransactionService {
   }
 
   public execute({ title, value, type }: Response): Transaction {
-    const balance = this.transactionsRepository.getBalance();
+    const { total } = this.transactionsRepository.getBalance();
 
-    if (type !== 'income' && type !== 'outcome') {
+    if (!['income', 'outcome'].includes(type)) {
       throw Error('Incompatible transaction type.');
     }
 
-    if (type === 'outcome' && value > balance.total) {
+    if (type === 'outcome' && value > total) {
       throw Error('The amount is higher than the cash available.');
     }
 
